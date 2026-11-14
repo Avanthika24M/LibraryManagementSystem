@@ -1,0 +1,10 @@
+LMS2
+U 1 "Admin" "4f3361db183a51be715398f28af28d76" "d383a905b086dc2d09a44777c192bce2022892253d3a584b3b28e5b4fd73e9d4" "ADMIN" 1
+U 2 "Banu" "fce074dfdbdb35c247236b7d33996cef" "6c39964a25041df654fbad8b034211753796d3959c9bf883be44a9de3ce685a9" "MEMBER" 1
+U 3 "Staff01" "d7e9ea21f9902e8a44bdf38d08173f18" "1e0588a55ec8afe53efa9ed0db5f58776c2ecf7432db1f45bd41b604406c2611" "STAFF" 1
+B 101 "Advanced C++ Programming" "Bjarne Stroustrup" "Programming" 8 8
+B 102 "Advanced Python Programming" "Guido van Rossum" "Computer Science" 10 10
+R 1 101 2 "APPROVED"
+R 2 102 2 "REJECTED"
+R 3 102 2 "PENDING"
+L 1 101 2 "2026-11-14" "2026-11-28" "2026-11-14"

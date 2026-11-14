@@ -123,17 +123,57 @@ namespace lms {
         it->second=copy;
         return true;
     }
-    // Delete a book only when no copies are borrowed or requested.
-    bool Library::deleteBook(const User& actor,int bookId) {
-        auto it=books.find(bookId);
-        if(!privileged(actor)||it==books.end()||it->second.total!=it->second.available)return false;
-        for(const auto& [id,r]:requests) {
-            (void)id;
-            if(r.bookId==bookId&&r.status=="PENDING")return false;
-        }
-        books.erase(it);
-        return true;
+    // Delete a book only when it has no active loans,
+// historical loans, or borrowing requests.
+bool Library::deleteBook(const User& actor, int bookId)
+{
+    // Step 1: Check whether the user has permission.
+    if (!privileged(actor))
+    {
+        return false;
     }
+
+    // Step 2: Check whether the book exists.
+    auto bookIt = books.find(bookId);
+
+    if (bookIt == books.end())
+    {
+        return false;
+    }
+
+    // Step 3: Prevent deletion while copies are borrowed.
+    if (bookIt->second.total != bookIt->second.available)
+    {
+        return false;
+    }
+
+    // Step 4: Preserve existing borrowing request history.
+    for (const auto& [requestId, request] : requests)
+    {
+        (void)requestId;
+
+        if (request.bookId == bookId)
+        {
+            return false;
+        }
+    }
+
+    // Step 5: Preserve existing loan history.
+    for (const auto& [loanId, loan] : loans)
+    {
+        (void)loanId;
+
+        if (loan.bookId == bookId)
+        {
+            return false;
+        }
+    }
+
+    // Step 6: Delete the book when no references exist.
+    books.erase(bookIt);
+
+    return true;
+}
     // Record a member request for an available book.
     bool Library::requestBook(const User& actor,int bookId) {
         if(!actor.active||actor.role!="MEMBER"||!books.count(bookId)||books.at(bookId).available<=0)return false;

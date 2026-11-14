@@ -9,6 +9,29 @@
 namespace lms {
     // Write all records to a temporary file and replace the stored snapshot.
     bool Library::save(const std::string& path)const {
+            // Validate loan references before saving.
+    for (const auto& [id, loan] : loans)
+    {
+        (void)id;
+
+        if (!books.count(loan.bookId) ||
+            !users.count(loan.memberId))
+        {
+            return false;
+        }
+    }
+
+    // Validate request references before saving.
+    for (const auto& [id, request] : requests)
+    {
+        (void)id;
+
+        if (!books.count(request.bookId) ||
+            !users.count(request.memberId))
+        {
+            return false;
+        }
+    }
         namespace fs=std::filesystem;
         fs::path target(path),tmp=target;
         tmp+=".tmp";
